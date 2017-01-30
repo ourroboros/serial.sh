@@ -30,10 +30,10 @@ fi
 
 if (($encode)) && (($cloud))
 then
-    cat $1 | base64 |& curl -s -F 'f:1=<-' ix.io
+    cat "$1" | base64 |& curl -s -F 'f:1=<-' ix.io
 elif (($encode))
 then
-    cat $1 | base64
+    cat "$1" | base64
 else
-    cat $1 | base64 -d
+    cat "$1" | base64 -d
 fi
