@@ -1,17 +1,17 @@
-#!/bin/bash
+#!/bin/sh
 
 OPTIND=1
-encode=1
-cloud=0
+encode=true
+cloud=false
 
 while getopts ":dc" opt
 do
     case $opt in
 	d)
-	    encode=0
+	    encode=false
 	    ;;
 	c)
-	    cloud=1
+	    cloud=true
 	    ;;
 	\?)
 	    echo "Invalid option -$OPTARG"
@@ -21,19 +21,21 @@ do
 done
 shift $((OPTIND-1))
 
-if [ $encode -eq 0 ] && [ $cloud -eq 1 ]
+if [ $encode = false ] && [ $cloud = true ]
 then
     echo "You can't use '-d' and '-c' at the same time"
     exit 2
 fi
 
 
-if (($encode)) && (($cloud))
+if [ $encode = true ] && [ $cloud = true ]
 then
-    cat "$1" | base64 |& curl -s -F 'f:1=<-' ix.io
-elif (($encode))
+     base64 "$1" 2>&1 | curl -s -F 'f:1=<-' ix.io
+elif [ $encode = true ]
 then
-    cat "$1" | base64
+    #cat "$1" | base64
+    base64 "$1"
 else
-    cat "$1" | base64 -d
+    #cat "$1" | base64 -d
+    base64 -d "$1"
 fi
